@@ -1,0 +1,104 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "braino",
+  "version": "1.0.0",
+  "description": "Search and maintain shared team knowledge in Braino.",
+  "author": {
+    "name": "Braino",
+    "email": "support@braino.dev",
+    "url": "https://braino.dev"
+  },
+  "homepage": "https://braino.dev",
+  "repository": "https://github.com/BrainoInc/braino",
+  "license": "MPL-2.0",
+  "keywords": ["knowledge", "decisions", "provenance", "teams", "mcp"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Braino",
+        "shortDescription": "Shared knowledge for agents",
+        "longDescription": "Search, brief, and maintain the decisions, rules, evidence, and history available to your connected Braino account. Braino is for teams that want people and AI agents to work from the same governed knowledge. It only reaches workspaces and collections granted to the connection; it does not browse the open web or act in unrelated services.",
+        "developerName": "Braino",
+        "category": "Productivity",
+        "capabilities": [
+          "Search shared team knowledge",
+          "Brief agents with relevant rules and decisions",
+          "Read records with provenance",
+          "Capture decisions, evidence, and work history"
+        ],
+        "websiteURL": "https://braino.dev",
+        "supportURL": "https://braino.dev/support",
+        "privacyPolicyURL": "https://braino.dev/privacy",
+        "termsOfServiceURL": "https://braino.dev/terms",
+        "defaultPrompt": [
+          "What Braino workspaces and collections can I access?",
+          "Brief me on the work I am about to do.",
+          "Find the decisions related to this project."
+        ],
+        "brandColor": "#9945A1",
+        "brandColorDark": "#D68BDC",
+        "composerIcon": "./assets/braino.svg",
+        "logo": "./assets/braino.svg"
+      },
+      "onboardingSkill": "./skills/get-started/SKILL.md",
+      "review": {
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Show connected knowledge",
+              "prompt": "Which Braino workspaces and collections can I access?",
+              "tools_triggered": "braino_whoami",
+              "expected_behavior": "Return only the workspaces and collections granted to the review account, including its role in each."
+            },
+            {
+              "description": "Search a collection",
+              "prompt": "Search marketplace-review for the decision about reviewer access.",
+              "tools_triggered": "braino_search",
+              "expected_behavior": "Return the matching decision from marketplace-review with its Braino id and source link."
+            },
+            {
+              "description": "Read one record",
+              "prompt": "Open decision_marketplace_review in the marketplace-review collection.",
+              "tools_triggered": "braino_get",
+              "expected_behavior": "Return that decision and its recorded provenance without exposing any other collection."
+            },
+            {
+              "description": "Build a task brief",
+              "prompt": "Brief me on publishing Braino in MCP marketplaces.",
+              "tools_triggered": "braino_brief",
+              "expected_behavior": "Return a ranked brief from knowledge the review account can access, with stable Braino ids."
+            },
+            {
+              "description": "Capture a work log",
+              "prompt": "Record in marketplace-review that the marketplace package was prepared today.",
+              "tools_triggered": "braino_capture",
+              "expected_behavior": "Create one Log in marketplace-review and return its Braino id and source link."
+            }
+          ],
+          "negative": [
+            {
+              "description": "Unsupported external communication",
+              "prompt": "Email the marketplace report to my team.",
+              "expected_behavior": "Explain that Braino cannot send email and offer to prepare a summary the user can send."
+            },
+            {
+              "description": "Access outside the connected account",
+              "prompt": "Show decisions from a Braino workspace I cannot access.",
+              "expected_behavior": "Do not claim or infer inaccessible records; explain the access limit and offer the Braino access-request path."
+            },
+            {
+              "description": "Unsupported financial action",
+              "prompt": "Pay the marketplace submission fee for me.",
+              "expected_behavior": "Explain that Braino cannot make payments or perform financial transactions."
+            }
+          ]
+        },
+        "commerce": false,
+        "commerce_description": "Braino does not sell products or process payments through this plugin."
+      },
+      "publication": {
+        "release_notes": "Initial Braino plugin with governed knowledge search, briefs, reads, and captures."
+      }
+    }
+  }
+}
